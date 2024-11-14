@@ -1,0 +1,98 @@
+==================================================================My Tasks=======================================================================
+1.DateRangePicker
+import { DateRangePicker } from "rsuite";
+import { DateRange } from "rsuite/esm/DateRangePicker";
+
+>using dateRangePicker from rsuite package in react
+>use dataRange state for useState  ===>const [dateRange, setDateRange] = useState<[Date, Date] |null> (null);
+
+== <DateRangePicker 
+         className="date-picker-small"
+          value={dateRange}
+          onChange={handleDateRangeChange}
+          format="yyyy-MM-dd"
+          shouldDisableDate={disableFutureDates}
+        />
+>in the value targeting the dateRange state and onChange targeting a handleDateRangeChange function.
+
+==  const handleDateRangeChange = (
+    range: DateRange | null
+  ) => {
+    if (range) {
+      setDateRange(range);
+     dispatch(setStartDate(moment(range[0]).format('YYYY-MM-DD')) )
+     dispatch(setEndDate(moment(range[1]).add('days', 1).format('YYYY-MM-DD')) )
+    }else {
+      setDateRange(null);
+      dispatch(setStartDate(''))
+      dispatch(setEndDate(''))
+    }
+  };
+
+>if there is range value occur in through onChange that range value should be setDateRange and 
+dispatch to the setStartDate and setEndDate to the slice Store(redux)
+-------------------------------------------------------------------------------------------------------------------------------------------------------
+2.Description field along formating options(TinyMCE)
+import { Editor } from '@tinymce/tinymce-react';
+
+>Decription component is present in multiplr forms so create that in seperate component and
+ add that component in every form which is having description field.
+
+>Every forms has a formik so by using a props send the formik values.
+
+
+==const TinyMCEEditor = ({ formik }: any) => {
+  const handleEditorChange = (content: string) => {
+    formik.setFieldValue('description', content);
+  };
+
+  return (
+    <div className='tinymce-component' style={{ paddingBottom: "10px" }}>
+    
+      <Editor
+        apiKey="yg055gz3fpg0ofpqurr4d83kiegmgaru808o453c36lqlifb"
+        init={{
+          height: 150,
+          menubar: false,
+          plugins: ['link', 'lists', 'code'],
+          toolbar: 'undo redo | bold italic | alignleft aligncenter alignright | bullist numlist | link',
+          content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:16px }',
+          placeholder: 'Add description here...',
+          link_target_list: false,
+          branding: false,
+          valid_elements: '*[*]', // Allow all elements in the editor
+          paste_as_text: true, // Prevent pasting formatted content that could introduce <p> tags
+          block_unsupported_attrs: true,
+          resize: false,
+          elementpath: false,  // Removes the element path at the bottom (which shows <p> tags)
+          statusbar: false,    // Remove the status bar at the bottom entirely
+          
+          // Added options to remove <p> tags and tooltips
+          forced_root_block: '',  // Disable auto <p> tags
+          contextmenu: false,        // Disable right-click context menu (tooltips)
+          toolbar_mode: 'sliding',   // Remove some unnecessary tooltips
+        }}
+        onEditorChange={handleEditorChange}
+      />
+    </div>
+  );
+};
+
+
+export default TinyMCEEditor;
+
+> in the editor apikey and init is mandatory init as object which is have height menubar etc..
+> which are the things present in the init object that will apppear in the formatting bar.
+
+> in the onEditorChange={handleEditorChange} handle changes in the description field. that method will be called 
+const handleEditorChange = (content: string) => {
+    formik.setFieldValue('description', content);
+  };
+>
+data comes as content
+set into the formik.setFieldvalue
+
+
+==  call the component like this <TinyMCEEditor formik={formik} />  send formik as props values.
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
